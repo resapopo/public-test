@@ -1,82 +1,94 @@
 <!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *　
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
 <html>
-  <head>
+<head>
+
     <meta charset="utf-8">
-    <title>St Huxley's Community College</title>
-    <link href="style.css" type="text/css" rel="stylesheet">
-  </head>
-  <body>
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
 
-  <header>
-    <h1>St Huxley's Community College</h1>
-  </header>
+    <base target="_blank">
 
-  <section>
-      <h2>Brave new world</h2>
+    <title>MediaStream Recording</title>
 
-      <p>It's a brave new world out there. Our children are being put in increasing more competitive situations, both during recreation, and as they start to move into the adult world of <a href="https://en.wikipedia.org/wiki/Examination">examinations</a>, <a href="https://en.wikipedia.org/wiki/Jobs">jobs</a>, <a href="https://en.wikipedia.org/wiki/Career">careers</a>, and other life choices. Having the wrong mindset, becoming <a href="https://en.wikipedia.org/wiki/Emotion">too emotional</a>, or making the wrong choices can contribute to them experiencing difficulty in taking their rightful place in today's ideal society.</p>
+    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/main.css">
 
-      <p>As concerned parents, guardians or carers, you will no doubt want to give your children the best possible start in life — and you've come to the right place.</p>
+</head>
 
-      <h2>The best start in life</h2>
+<body>
 
-      <p>At St. Huxley's, we pride ourselves in not only giving our students a top quality education, but also giving them the societal and emotional intelligence they need to win big in the coming utopia. We not only excel at subjects such as genetics, data mining, and chemistry, but we also include compulsory lessons in:</p>
+<div id="container">
 
-      <ul>
-        <li>Emotional control</li>
-        <li>Judgement</li>
-        <li>Assertion</li>
-        <li>Focus and resolve</li>
-      </ul>
+    <h1>Remote Recording Web Applycation</h1>
 
-      <p>If you are interested, then you next steps will likely be to:</p>
-      
-      <ol>
-        <li><a href="#">Call us</a> for more information</li>
-        <li><a href="#">Ask for a brochure</a>, which includes signup form</li>
-        <li><a href="#">Book a visit</a>!</li>
-      </ol>
-  </section>
+    <p> This app is highly depending on MediaStream Recording
+        in the series of
+        <a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a>. 
+        For more information see the MediaStream Recording API <a
+            href="http://w3c.github.io/mediacapture-record/MediaRecorder.html"
+            title="W3C MediaStream Recording API Editor's Draft">Editor's&nbsp;Draft</a>.
+    </p>
 
-  <aside>
+    <!-- 録音の返し-->
+    <video id="gum" playsinline autoplay muted></video>
+    <!-- store recorded tracks -->
+    <ol id="tracks">
+    <!-- <video id="recorded" playsinline></video> -->
 
-    <h2>Top course choices</h2>
+    </ol>
 
-    <ul>
-      <li><a href="#">Genetic engineering</a></li>
-      <li><a href="#">Genetic mutation</a></li>
-      <li><a href="#">Organic Chemistry</a></li>
-      <li><a href="#">Pharmaceuticals</a></li>
-      <li><a href="#">Biochemistry with behaviour</a></li>
-      <li><a href="#">Pure biochemistry</a></li>
-      <li><a href="#">Data mining</a></li>
-      <li><a href="#">Computer security</a></li>
-      <li><a href="#">Bioinformatics</a></li>
-      <li><a href="#">Cybernetics</a></li>
-    </ul>
+    <div>
+        <button id="start">Start camera</button>
+        <button id="record" disabled>Start Recording</button>
+        <button id="play" disabled>Push</button>
+        <button id="download" disabled>Download</button>
+        <label for="index">Track Number:</label>
+        <input type="number" id="index" name="track_number" value="0"
+               min="0" max="0">
+        <button id="playall" disabled>Play All</button>
+        <button id="activation">Active</button>
+        <input type="file" accept="video/*" id="upload"></input>
+    </div>
 
-    <p><a href="#" class="others">See more</a></p>
+    <div>
+        <h4>Media Stream Constraints options</h4>
+        <p>Echo cancellation: <input type="checkbox" id="echoCancellation"></p>
+    </div>
 
-  </aside>
+    <div>
+        <span id="errorMsg"></span>
+    </div>
 
-  <nav>
+    <!--
+    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/record"
+       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+    -->
 
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Finding us</a></li>
-      <li><a href="#">Courses</a></li>
-      <li><a href="#">Staff</a></li>
-      <li><a href="#">Media</a></li>
-      <li><a href="#">Prospectus</a></li>
-    </ul>
+</div>
 
-  </nav>
+<!-- include adapter for srcObject shim -->
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<!-- localでhowler.jsを読み込み -->
+<script src="js/howler.js" async></script>
+<!-- cdnからhowler.min.jsを読み込み -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.min.js"></script> -->
+<script src="js/main.js" async></script>
+<!--
+<script src="../../../js/lib/ga.js"></script>
+-->
 
-  <footer>
-
-    <p>&copy; 2016 St Huxley's Community College</p>
-
-  </footer>
-
-  </body>
+</body>
 </html>
